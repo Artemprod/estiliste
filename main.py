@@ -15,14 +15,14 @@ async def main() -> None:
     config = load_bot_config(".env")
     client = AsyncOpenAI(api_key=config.chatGPT.key)
 
-    redis = Redis(host=config.redis_storage.host,
-                  port=config.redis_storage.port)
-    storage: RedisStorage = RedisStorage(redis=redis)
+    # redis = Redis(host=config.redis_storage.host,
+    #               port=config.redis_storage.port)
+    # storage: RedisStorage = RedisStorage(redis=redis)
 
     bot: Bot = Bot(token=config.bot.tg_bot_token,
                    default=DefaultBotProperties(parse_mode="MARKDOWN"))
 
-    dp: Dispatcher = Dispatcher(storage=storage, openai_client=client)
+    dp: Dispatcher = Dispatcher(openai_client=client)
     dp.include_router(command_handler.router)
     dp.include_router(user_handler.router)
     await set_main_menu(bot)
